@@ -6,7 +6,7 @@
     Code created on February 2019.
 """
 
-import numpy
+import numpy as np
 
 f = open("assigment 1/data",'r')
 f.seek(0)
@@ -62,3 +62,10 @@ def read_testing_set():
 training_set = read_training_set()
 validation_set = read_validation_set()
 testing_set = read_testing_set()
+
+np.random.seed(1)
+
+random = [] #type: list
+for i in range (0,863):
+    random.append(2 * np.random.random_sample() -1)
+print(random)
