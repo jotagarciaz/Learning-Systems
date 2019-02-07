@@ -1,27 +1,4 @@
-@relation dr
-
-@attribute 0 numeric
-@attribute 1 numeric
-@attribute 2 numeric
-@attribute 3 numeric
-@attribute 4 numeric
-@attribute 5 numeric
-@attribute 6 numeric
-@attribute 7 numeric
-@attribute 8 numeric
-@attribute 9 numeric
-@attribute 10 numeric
-@attribute 11 numeric
-@attribute 12 numeric
-@attribute 13 numeric
-@attribute 14 numeric
-@attribute 15 numeric
-@attribute 16 numeric
-@attribute 17 numeric
-@attribute 18 numeric
-@attribute Class {0,1}
-
-@data
+#Ajusting dataset (1st data binary result of quality assessment. 0 = bad quality 1 = sufficient quality. 2nd The binary result of pre-screening, where 1 indicates severe retinal abnormality and 0 its lack. 3rd to 8th  The results of MA detection. Each feature value stand for thenumber of MAs found at the confidence levels alpha = 0.5, . . . , 1, respectively. 9th to 15th contain the same information as 3rd-8th for exudates. However,as exudates are represented by a set of points rather than the number ofpixels constructing the lesions, these features are normalized by dividing thenumber of lesions with the diameter of the ROI to compensate different imagesizes. 17th he euclidean distance of the center ofthe macula and the center of the optic disc to provide important informationregarding the patients condition. This featureis also normalized with the diameter of the ROI. 18th The diameter of the optic disc. 19th The binary result of the AM/FM-based classification. 20th Class={0,1})
 1,1,22,22,22,19,18,14,49.895756,17.775994,5.27092,0.771761,0.018632,0.006864,0.003923,0.003923,0.486903,0.100025,1,0
 1,1,24,24,22,18,16,13,57.709936,23.799994,3.325423,0.234185,0.003903,0.003903,0.003903,0.003903,0.520908,0.144414,0,0
 1,1,62,60,59,54,47,33,55.831441,27.993933,12.687485,4.852282,1.393889,0.373252,0.041817,0.007744,0.530904,0.128548,0,1
