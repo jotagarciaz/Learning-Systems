@@ -6,6 +6,8 @@
     Code created on February 2019.
 """
 
+import numpy
+
 f = open("assigment 1/data",'r')
 f.seek(0)
 n_lines_to_read = len(f.readlines())
