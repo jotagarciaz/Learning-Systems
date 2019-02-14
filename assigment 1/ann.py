@@ -30,7 +30,7 @@ def read_training_set():
     for i in range(0,len(training_set)):
         training_set[i] = list(map(lambda x: num(x), training_set[i]))
    
-    return training_set
+    return np.array(training_set)
 
 def read_validation_set():
     global f, n_lines_to_read
@@ -43,7 +43,7 @@ def read_validation_set():
     for i in range(0, len(validation_set)):
         validation_set[i] = list(map(lambda x: num(x), validation_set[i]))
     
-    return validation_set
+    return np.array(validation_set)
 
 def read_testing_set():
     global f, n_lines_to_read
@@ -56,7 +56,7 @@ def read_testing_set():
     for i in range(0, len(testing_set)):
         testing_set[i] = list(map(lambda x: num(x), testing_set[i]))
     
-    return testing_set
+    return np.array(testing_set)
     
 # First we get the data from the data.txt file.
 training_set = read_training_set()
@@ -66,6 +66,49 @@ testing_set = read_testing_set()
 np.random.seed(1)
 
 random = [] #type: list
-for i in range (0,863):
+for i in range (0,len(training_set[0])):
     random.append(2 * np.random.random_sample() -1)
-print(random)
+
+#for iteration in range(10000):
+ #   output = output_neuron(random)
+    #synaptic_weights += np.dot(training_set.T, (training_set_outputs - output) * output * (1 - output))
+
+def output_neuron(random):
+    random = np.array(random)
+    sum = 0
+    for i in range (0, len(training_set)):
+        sum += training_set[i] * random[i]
+    sum = -sum
+    return 1 / (1 + np.exp(sum))
+
+# Make a prediction with weights
+# row = data?
+def predict(row, weights):
+	activation = weights[0]
+	for i in range(len(row)-1):
+		activation += weights[i + 1] * row[i]
+	return 1.0 if activation >= 0.0 else 0.0
+
+# Estimate Perceptron weights using stochastic gradient descent
+def train_weights(train, l_rate, n_epoch):
+	weights = [0.0 for i in range(len(train[0]))]
+	for epoch in range(n_epoch):
+		sum_error = 0.0
+		for row in train:
+			prediction = predict(row, weights)
+			error = row[-1] - prediction
+			sum_error += error**2
+			weights[0] = weights[0] + l_rate * error
+			for i in range(len(row)-1):
+				weights[i + 1] = weights[i + 1] + l_rate * error * row[i]
+		print('>epoch=%d, lrate=%.3f, error=%.3f' % (epoch, l_rate, sum_error))
+	return weights
+
+l_rate = 0.1
+n_epoch = 200
+weights = train_weights(training_set, l_rate, n_epoch)
+print(weights)
+
+for row in training_set:
+	prediction = predict(row, random)
+	print("Expected=%d, Predicted=%d" % (row[-1], prediction))
