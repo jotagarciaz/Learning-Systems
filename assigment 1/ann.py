@@ -104,11 +104,11 @@ def train_weights(train, l_rate, n_epoch):
 		print('>epoch=%d, lrate=%.3f, error=%.3f' % (epoch, l_rate, sum_error))
 	return weights
 
-l_rate = 0.1
-n_epoch = 200
+l_rate = 0.01
+n_epoch = 500
 weights = train_weights(training_set, l_rate, n_epoch)
 print(weights)
 
 for row in training_set:
-	prediction = predict(row, random)
+	prediction = predict(row, weights)
 	print("Expected=%d, Predicted=%d" % (row[-1], prediction))
