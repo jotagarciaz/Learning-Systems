@@ -104,7 +104,7 @@ def train_weights(train, l_rate, n_epoch):
 		print('>epoch=%d, lrate=%.3f, error=%.3f' % (epoch, l_rate, sum_error))
 	return weights
 
-l_rate = 0.01
+l_rate = 0.01 #¿l_rate esta funcionando correctamente? Learning Rate: Used to limit the amount each weight is corrected each time it is updated.
 n_epoch = 100
 weights = train_weights(training_set, l_rate, n_epoch)
 print(weights)
