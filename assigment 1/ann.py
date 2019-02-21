@@ -105,10 +105,19 @@ def train_weights(train, l_rate, n_epoch):
 	return weights
 
 l_rate = 0.01
-n_epoch = 500
+n_epoch = 100
 weights = train_weights(training_set, l_rate, n_epoch)
 print(weights)
 
-for row in training_set:
-	prediction = predict(row, weights)
-	print("Expected=%d, Predicted=%d" % (row[-1], prediction))
+for row in validation_set:
+    prediction = predict(row,weights)
+    print("Expected=%d, Predicted=%d"%(row[-1],prediction))
+
+
+hit=0
+for row in testing_set:
+    prediction = predict(row,weights)
+    if row[-1] == prediction:
+        hit+=1
+
+print(hit/len(testing_set))
