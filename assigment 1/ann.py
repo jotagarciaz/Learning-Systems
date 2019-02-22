@@ -99,31 +99,47 @@ def generate_random_weights(range_given):
 
 def train_weights(train, l_rate, n_epoch):
     global number_neurons
-    weights = generate_random_weights((len(train[0])-1) * number_neurons)
-    for epoch in range(n_epoch):
-        sum_error = 0.0
-        for row in train:
-            prediction = predict(row, weights)
-            error = row[-1] - prediction
-            sum_error += error**2
-            weights[0] = weights[0] + l_rate * error
-            for i in range(len(row)-1):
-                weights[i + 1] = weights[i + 1] + l_rate * error * row[i]
-        print('Epoch = %d, lrate = %.3f, error = %.3f' % (epoch, l_rate, sum_error))
-    return weights
+    aux = []  
+    for neuron in range(number_neurons):
+        weights = generate_random_weights(len(train[0]))
+        for epoch in range(n_epoch):
+            sum_error = 0.0
+            for row in train:
+                prediction = predict(row, weights)
+                error = row[-1] - prediction
+                sum_error += error**2
+                weights[0] = weights[0] + l_rate * error
+                for i in range(len(row)-1):
+                    weights[i + 1] = weights[i + 1] + l_rate * error * row[i]
+            print('Epoch = %d, lrate = %.3f, error = %.3f' % (epoch, l_rate, sum_error))
+        aux.append(weights)
+    return aux
 
 l_rate = 0.01 #¿l_rate esta funcionando correctamente? Learning Rate: Used to limit the amount each weight is corrected each time it is updated.
-n_epoch = 100
+n_epoch = 150
 weights = train_weights(training_set, l_rate, n_epoch)
 print(weights)
 
+best_option = 0
+for option in range(0,len(weights)):
+    maximum_value = 0.0
+    hits = 0
+    for row in validation_set:
+        prediction = predict(row,weights[option])
+        if row[-1] == prediction:
+            hits += 1
+    value = hits/len(validation_set)
+    if value >= maximum_value:
+        maximum_value = value
+        best_option = option
+
 for row in validation_set:
-    prediction = predict(row,weights)
+    prediction = predict(row,weights[best_option])
     print("Expected = %d, Predicted = %d"%(row[-1],prediction))
 
 hit = 0
 for row in testing_set:
-    prediction = predict(row,weights)
+    prediction = predict(row,weights[best_option])
     if row[-1] == prediction:
         hit += 1
 
