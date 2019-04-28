@@ -17,10 +17,9 @@ import random
 import matplotlib.pyplot as plt
 
 
-N_MUTANTS=50
+N_MUTANTS=60
 mutants=[]
-MAXIMUN_DISTANCE_ALLOWED=9000
-MAXIMUN_GENERATIONS_EXTRA=0
+MAXIMUM_DISTANCE_ALLOWED=7700
 
 
 class Point:
@@ -106,7 +105,6 @@ def crossover(parent1,parent2):
 def mutate():
     global mutants
     i=random.randrange(1, len(mutants))
-    #for i in range(1,N_MUTANTS):
     random_index1 = random.randrange(1,len(mutants[i])-1)
     random_index2 = random.randrange(1,len(mutants[i])-1)
     aux=mutants[i][random_index1]
@@ -118,13 +116,13 @@ def mutate():
 def main():
 
     global mutants
-    points=read_file("berlin_coordinates")
+    points=read_file("assignment 3/berlin_coordinates")
     generate_mutants(points)
-    result_distance=MAXIMUN_DISTANCE_ALLOWED*100
+    result_distance=MAXIMUM_DISTANCE_ALLOWED*100
     graph_distances=[]
     graph_counter=[]
     counter=0
-    while result_distance>9000:
+    while result_distance>MAXIMUM_DISTANCE_ALLOWED:
         order_paths()
         distance=calculate_distance_path(mutants[0])
         
@@ -134,7 +132,7 @@ def main():
         
         if(distance<result_distance):
             result_distance=distance
-            print("best distance until now: ",result_distance)
+            print("Best distance until now:",result_distance, "Generations:", counter)
             result_path=mutants[0]
             graph_counter.append(counter)
             graph_distances.append(result_distance)
@@ -146,23 +144,7 @@ def main():
     plt.xlabel('Generation')
     plt.show()
 
-
-    for generations in range(0,MAXIMUN_GENERATIONS_EXTRA):
-        order_paths()
-        distance=calculate_distance_path(mutants[0])
-
-        for i in range(2,N_MUTANTS):
-            cross=crossover(mutants[0],mutants[1])
-            mutants[i]=cross
-        
-        if(distance<result_distance):
-            result_distance=distance
-            print("best distance until now: ",result_distance)
-            result_path=mutants[0]
-        mutate()
-
-
-    print("Best result distance: ",result_distance," Best result path: ",result_path)
+    print("Best result distance:",result_distance," Best result path:",result_path)
     
     end = time.time()
     print(end - start)

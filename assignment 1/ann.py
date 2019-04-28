@@ -18,7 +18,7 @@ LINE_LEN=20
 PERCENTAGE_TRAINING=0.75
 PERCENTAGE_VALIDATION=0.1
 PERCENTAGE_TEST=0.15
-ACCURACY_REQUIRED = 0.76
+ACCURACY_REQUIRED = 0.79
 
 HIDDEN_LAYER_1 = 15 
 HIDDEN_LAYER_2 = 10
@@ -37,55 +37,55 @@ def read_training_set():
     n_lines_training = int(PERCENTAGE_TRAINING * n_lines_to_read) 
   
     f.seek(0)
-    resultado_training=np.zeros(n_lines_training)
+    training_result=np.zeros(n_lines_training)
     training_set=np.zeros((n_lines_training,LINE_LEN-1))
     for i in range(0, n_lines_training): 
         aux = f.readline()
         aux=aux.split(",", LINE_LEN)
         line=np.zeros(len(aux)-1)
         for j in range(0,len(aux)-1):
-            line[j-1]=(num(aux[j])/255)
+            line[j-1]=(num(aux[j]))
             
         training_set[i]=line.copy()
-        resultado_training[i]=int(aux[-1])
+        training_result[i]=int(aux[-1])
              
-    return training_set,resultado_training
+    return training_set,training_result
 
 def read_validation_set():
     n_lines_validation = int(PERCENTAGE_VALIDATION * n_lines_to_read) 
   
     f.seek(0)
-    resultado_validation =np.zeros(n_lines_validation)
+    validation_result =np.zeros(n_lines_validation)
     validation_set=np.zeros((n_lines_validation,LINE_LEN-1))
     for i in range(0, n_lines_validation): 
         aux = f.readline()
         aux=aux.split(",", LINE_LEN)
         line=np.zeros(len(aux)-1)
         for j in range(0,len(aux)-1):
-            line[j-1]=(num(aux[j])/255)
+            line[j-1]=(num(aux[j]))
             
         validation_set[i]=line.copy()
-        resultado_validation[i]=int(aux[-1])
+        validation_result[i]=int(aux[-1])
              
-    return validation_set,resultado_validation
+    return validation_set,validation_result
 
 def read_testing_set():
     n_lines_testing = int(PERCENTAGE_TEST * n_lines_to_read) 
   
     f.seek(0)
-    resultado_testing =np.zeros(n_lines_testing)
+    testing_result =np.zeros(n_lines_testing)
     testing_set=np.zeros((n_lines_testing,LINE_LEN-1))
     for i in range(0, n_lines_testing): 
         aux = f.readline()
         aux=aux.split(",", LINE_LEN)
         line=np.zeros(len(aux)-1)
         for j in range(0,len(aux)-1):
-            line[j-1]=(num(aux[j])/255)
+            line[j-1]=(num(aux[j]))
             
         testing_set[i]=line.copy()
-        resultado_testing[i]=int(aux[-1])
+        testing_result[i]=int(aux[-1])
              
-    return testing_set,resultado_testing
+    return testing_set,testing_result
 
 
 def sigmoid(net):
@@ -94,8 +94,8 @@ def sigmoid(net):
 def softmax(output):
 
     softmax = np.exp(output)
-    suma=np.sum(softmax)
-    softmax=softmax[0]/suma
+    summation=np.sum(softmax)
+    softmax=softmax[0]/summation
     output=softmax.argmax(axis=0)
     return output,softmax
 
@@ -105,8 +105,8 @@ def main():
     np.fill_diagonal(target_error,1)
     
 
-    datos_training,resultado_training=read_training_set()
-    datos_validation,resultado_validation=read_validation_set()
+    training_data,training_result=read_training_set()
+    validation_data,validation_result=read_validation_set()
 
      #weight and bias initialization
     weights_hidden_layer_1=np.random.uniform(-1,1,size=(LINE_LEN-1,HIDDEN_LAYER_1))
@@ -122,12 +122,12 @@ def main():
     counter=0
     graph_round=[]
     graph_accuracy=[]
-    while hits/len(datos_validation) <ACCURACY_REQUIRED:
+    while hits/len(validation_data) <ACCURACY_REQUIRED:
         hits=0
 
         #TRAINING
-        for x in range(len(datos_training)):
-            inputlayer_neurons = datos_training[x]
+        for x in range(len(training_data)):
+            inputlayer_neurons = training_data[x]
 
             #Forward Propogation
             hidden_layer_input_net_sum=np.dot(inputlayer_neurons,weights_hidden_layer_1)
@@ -144,7 +144,7 @@ def main():
             result_output, output_softmax= softmax(output_layer_input)
 
             #Backpropagation
-            E = target_error[int(resultado_training[x])]-output_softmax
+            E = target_error[int(training_result[x])]-output_softmax
 
             d_output = E*output_softmax * (1- output_softmax)
             
@@ -160,14 +160,14 @@ def main():
             weights_hidden_layer_2 = weights_hidden_layer_2 + hidden_layer_1_activations.T.dot(d_hidden_layer_2) *LEARNING_RATE
             bias_hidden_layer_2 = bias_hidden_layer_2 + np.sum(d_hidden_layer_2, axis=0,keepdims=True) *LEARNING_RATE
 
-            weights_hidden_layer_1 = weights_hidden_layer_1 + np.reshape(datos_training[x],(1,LINE_LEN-1)).T.dot(d_hidden_layer_1) *LEARNING_RATE
+            weights_hidden_layer_1 = weights_hidden_layer_1 + np.reshape(training_data[x],(1,LINE_LEN-1)).T.dot(d_hidden_layer_1) *LEARNING_RATE
             bias_hidden_layer_1 += np.sum(d_hidden_layer_1, axis=0,keepdims=True) *LEARNING_RATE
             
             
         
         #VALIDATION
-        for x in range(len(datos_validation)):
-            inputlayer_neurons = datos_validation[x]
+        for x in range(len(validation_data)):
+            inputlayer_neurons = validation_data[x]
 
             #Forward Propogation
             hidden_layer_input_net_sum=np.dot(inputlayer_neurons,weights_hidden_layer_1)
@@ -183,23 +183,23 @@ def main():
             
             result_output, output_softmax= softmax(output_layer_input)
             
-            if result_output== int(resultado_validation[x]):
+            if result_output== int(validation_result[x]):
                 hits=hits+1
         
-        print("porcentaje de acierto Validation= ",(hits/len(datos_validation))*100," ronda= ",counter)
+        print("Hit percentage Validation =",(hits/len(validation_data))*100," Round =",counter)
         counter=counter+1
-        graph_accuracy.append((hits/len(datos_validation))*100)
+        graph_accuracy.append((hits/len(validation_data))*100)
         graph_round.append(counter)
 
     #TESTING
-    print("Leyendo datos de testing")
-    datos_testing,resultado_testing=read_testing_set()
+    print("Reading testing data")
+    testing_data,testing_result=read_testing_set()
     hits=0
     hitsEntity=np.zeros(OUTPUT_NEURONS)
     datosEntity=np.zeros(OUTPUT_NEURONS)
 
-    for x in range(len(datos_testing)):
-        inputlayer_neurons = datos_testing[x]
+    for x in range(len(testing_data)):
+        inputlayer_neurons = testing_data[x]
 
         #Forward Propogation
         hidden_layer_input_net_sum=np.dot(inputlayer_neurons,weights_hidden_layer_1)
@@ -216,12 +216,12 @@ def main():
         result_output, output_softmax= softmax(output_layer_input)
         
         datosEntity[result_output]+=1
-        if result_output== int(resultado_testing[x]):
+        if result_output== int(testing_result[x]):
             hits=hits+1
             hitsEntity[result_output]+=1
 
-    print("porcentaje de acierto Testing= ",(hits/len(datos_testing))*100)
-    print("porcentaje de cada entidad= ",hitsEntity/datosEntity*100)
+    print("Hit percentage testing =",(hits/len(testing_data))*100)
+    print("Percentage of each entity =",hitsEntity/datosEntity*100)
 
     plt.plot(graph_round,graph_accuracy)
     plt.xlabel('Round')
