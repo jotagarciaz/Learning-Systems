@@ -26,6 +26,9 @@ OUTPUT_NEURONS = 3
 
 LEARNING_RATE=0.1
 
+MIDDLE_LOW=0.3
+MIDDLE_HIGH=0.8
+
 def num(s):
     try:
         return int(s)
@@ -126,56 +129,63 @@ def main():
     hits=np.zeros(3)
     counter = np.zeros(3)
     for e in range(len(training_data)):
-        if (training_data[e][0]<=0.3 or training_data[e][0]>=0.8) and (training_data[e][1]>=0.3) and (training_data[e][2]>=0.3) and (training_data[e][3]>=0.3 and training_data[e][3]<=0.8):
-            if training_result[e]==2:
+        element=training_data[e]
+        result=training_result[e]
+        if (element[0]<=MIDDLE_LOW or element[0]>=MIDDLE_HIGH) and (element[1]>=MIDDLE_LOW) and (element[2]>=MIDDLE_LOW) and (element[3]>=MIDDLE_LOW and element[3]<=MIDDLE_HIGH):
+            if result==2:
                 hits[1]+=1
             counter[1]+=1
-        elif (training_data[e][2]<=0.8) and (training_data[e][3] <= 0.3):
-            if training_result[e]==1:
+        elif (element[2]<=MIDDLE_HIGH) and (element[3] <= MIDDLE_LOW):
+            if result==1:
                 hits[0]+=1
             counter[0]+=1  
-        elif (training_data[e][1]<=0.8) and (training_data[e][2] >= 0.8) and (training_data[e][3] >= 0.8):
-            if training_result[e]==3:
+        elif (element[1]<=MIDDLE_HIGH) and (element[2] >= MIDDLE_HIGH) and (element[3] >= MIDDLE_HIGH):
+            if result==3:
                 hits[2]+=1
             counter[2]+=1
-        elif (training_data[e][0]>=0.3 and training_data[e][0]<=0.8) and (training_data[e][1]<=0.8) and (training_data[e][2]<=0.3) and (training_data[e][3]>=0.8):
-            if training_result[e]==2:
+        elif (element[0]>=MIDDLE_LOW and element[0]<=MIDDLE_HIGH) and (element[1]<=MIDDLE_HIGH) and (element[2]<=MIDDLE_LOW) and (element[3]>=MIDDLE_HIGH):
+            if result==2:
                 hits[1]+=1
             counter[1]+=1   
     for e in range(len(validation_data)):
-        if (validation_data[e][0]<=0.3 or validation_data[e][0]>=0.8) and (validation_data[e][1]>=0.3) and (validation_data[e][2]>=0.3) and (validation_data[e][3]>=0.3 and validation_data[e][3]<=0.8):
-            if validation_result[e]==2:
+        element=validation_data[e]
+        result=validation_result[e]
+        if (element[0]<=MIDDLE_LOW or element[0]>=MIDDLE_HIGH) and (element[1]>=MIDDLE_LOW) and (element[2]>=MIDDLE_LOW) and (element[3]>=MIDDLE_LOW and element[3]<=MIDDLE_HIGH):
+            if result==2:
                 hits[1]+=1
             counter[1]+=1
-        elif (validation_data[e][2]<=0.8) and (validation_data[e][3] <= 0.3):
-            if validation_result[e]==1:
+        elif (element[2]<=MIDDLE_HIGH) and (element[3] <= MIDDLE_LOW):
+            if result==1:
                 hits[0]+=1
             counter[0]+=1  
-        elif (validation_data[e][1]<=0.8) and (validation_data[e][2] >= 0.8) and (validation_data[e][3] >= 0.8):
-            if validation_result[e]==3:
+        elif (element[1]<=MIDDLE_HIGH) and (element[2] >= MIDDLE_HIGH) and (element[3] >= MIDDLE_HIGH):
+            if result==3:
                 hits[2]+=1
             counter[2]+=1
-        elif (validation_data[e][0]>=0.3 and validation_data[e][0]<=0.8) and (validation_data[e][1]<=0.8) and (validation_data[e][2]<=0.3) and (validation_data[e][3]>=0.8):
-            if validation_result[e]==2:
+        elif (element[0]>=MIDDLE_LOW and element[0]<=MIDDLE_HIGH) and (element[1]<=MIDDLE_HIGH) and (element[2]<=MIDDLE_LOW) and (element[3]>=MIDDLE_HIGH):
+            if result==2:
                 hits[1]+=1
-            counter[1]+=1
+            counter[1]+=1 
     for e in range(len(testing_data)):
-        if (testing_data[e][0]<=0.3 or testing_data[e][0]>=0.8) and (testing_data[e][1]>=0.3) and (testing_data[e][2]>=0.3) and (testing_data[e][3]>=0.3 and testing_data[e][3]<=0.8):
-            if testing_result[e]==2:
+        element=testing_data[e]
+        result=testing_result[e]
+        if (element[0]<=MIDDLE_LOW or element[0]>=MIDDLE_HIGH) and (element[1]>=MIDDLE_LOW) and (element[2]>=MIDDLE_LOW) and (element[3]>=MIDDLE_LOW and element[3]<=MIDDLE_HIGH):
+            if result==2:
                 hits[1]+=1
             counter[1]+=1
-        elif (testing_data[e][2]<=0.8) and (testing_data[e][3] <= 0.3):
-            if testing_result[e]==1:
+        elif (element[2]<=MIDDLE_HIGH) and (element[3] <= MIDDLE_LOW):
+            if result==1:
                 hits[0]+=1
             counter[0]+=1  
-        elif (testing_data[e][1]<=0.8) and (testing_data[e][2] >= 0.8) and (testing_data[e][3] >= 0.8):
-            if testing_result[e]==3:
+        elif (element[1]<=MIDDLE_HIGH) and (element[2] >= MIDDLE_HIGH) and (element[3] >= MIDDLE_HIGH):
+            if result==3:
                 hits[2]+=1
             counter[2]+=1
-        elif (testing_data[e][0]>=0.3 and testing_data[e][0]<=0.8) and (testing_data[e][1]<=0.8) and (testing_data[e][2]<=0.3) and (testing_data[e][3]>=0.8):
-            if testing_result[e]==2:
+        elif (element[0]>=MIDDLE_LOW and element[0]<=MIDDLE_HIGH) and (element[1]<=MIDDLE_HIGH) and (element[2]<=MIDDLE_LOW) and (element[3]>=MIDDLE_HIGH):
+            if result==2:
                 hits[1]+=1
-            counter[1]+=1
+            counter[1]+=1 
+
     print("contadores: ",sum(counter))
     print(hits/counter)
 main()
