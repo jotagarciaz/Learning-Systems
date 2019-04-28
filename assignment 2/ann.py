@@ -11,18 +11,18 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 
-f = open("/Users/jgarcia/Documents/Learning Systems/assignment 1/data", 'r')
+f = open("/Users/jgarcia/Documents/Learning Systems/assignment 2/iris", 'r')
 f.seek(0)
 n_lines_to_read = len(f.readlines())
-LINE_LEN=20
+LINE_LEN=5
 PERCENTAGE_TRAINING=0.75
 PERCENTAGE_VALIDATION=0.1
 PERCENTAGE_TEST=0.15
-ACCURACY_REQUIRED = 0.70
+ACCURACY_REQUIRED = 0.9
 
-HIDDEN_LAYER_1 = 8 
-HIDDEN_LAYER_2 = 5
-OUTPUT_NEURONS = 2
+HIDDEN_LAYER_1 = 4 
+HIDDEN_LAYER_2 = 3
+OUTPUT_NEURONS = 3
 
 LEARNING_RATE=0.1
 
@@ -32,16 +32,16 @@ def num(s):
     except ValueError:
         return float(s)
 
-
 """ First we need to extract values from the file"""
 def read_training_set():
     n_lines_training = int(PERCENTAGE_TRAINING * n_lines_to_read) 
+
     f.seek(0)
     training_result=np.zeros(n_lines_training)
     training_set=np.zeros((n_lines_training,LINE_LEN-1))
     for i in range(0, n_lines_training): 
         aux = f.readline()
-        aux=aux.split(",", LINE_LEN)
+        aux=aux.split(" ", LINE_LEN)
         line=np.zeros(len(aux)-1)
         for j in range(0,len(aux)-1):
             line[j]=(num(aux[j]))
@@ -55,11 +55,12 @@ def read_validation_set():
     n_lines_validation = int(PERCENTAGE_VALIDATION * n_lines_to_read) 
 
 
+
     validation_result =np.zeros(n_lines_validation)
     validation_set=np.zeros((n_lines_validation,LINE_LEN-1))
     for i in range(0, n_lines_validation): 
         aux = f.readline()
-        aux=aux.split(",", LINE_LEN)
+        aux=aux.split(" ", LINE_LEN)
         line=np.zeros(len(aux)-1)
         for j in range(0,len(aux)-1):
             line[j]=(num(aux[j]))
@@ -72,11 +73,13 @@ def read_validation_set():
 def read_testing_set():
     n_lines_testing = int(PERCENTAGE_TEST * n_lines_to_read) 
 
+
+
     testing_result =np.zeros(n_lines_testing)
     testing_set=np.zeros((n_lines_testing,LINE_LEN-1))
     for i in range(0, n_lines_testing): 
         aux = f.readline()
-        aux=aux.split(",", LINE_LEN)
+        aux=aux.split(" ", LINE_LEN)
         line=np.zeros(len(aux)-1)
         for j in range(0,len(aux)-1):
             line[j]=(num(aux[j]))
@@ -156,7 +159,7 @@ def main():
             result_output, output_softmax= softmax(output_layer_input)
 
             #Backpropagation
-            E = target_error[int(training_result[x])]-output_softmax
+            E = target_error[int(training_result[x])-1]-output_softmax
 
             d_output = E*output_softmax * (1- output_softmax)
             
@@ -195,7 +198,7 @@ def main():
             
             result_output, output_softmax= softmax(output_layer_input)
             
-            if result_output== int(validation_result[x]):
+            if result_output+1== int(validation_result[x]):
                 hits=hits+1
         
         print("Hit percentage Validation =",(hits/len(validation_data))*100," Round =",counter)
@@ -228,7 +231,7 @@ def main():
         result_output, output_softmax= softmax(output_layer_input)
         
         datosEntity[result_output]+=1
-        if result_output== int(testing_result[x]):
+        if result_output+1== int(testing_result[x]):
             hits=hits+1
             hitsEntity[result_output]+=1
 
