@@ -15,40 +15,34 @@ import os
 
 GOAL='F'
 """ First we need to extract values from the file"""
-def read_files(file1):
+def read_files(file_name):
 
-    f = open(file1, "r") #city_1
-    f.seek(0)
+    file = open(file_name, "r") #city_1
+    file.seek(0)
     nodes={}
-    for line in f:
+    for line in file:
         line_split=line.split(" ", 3)
         origin=line_split[0]
-        destiny= line_split[1]
+        destiny=line_split[1]
         distance=int(line_split[2])
-        route= {destiny:distance}
-        route_inverse={origin:distance}
+        route={destiny:distance}
+        inverse_route={origin:distance}
         if destiny not in nodes:
-            nodes.update({destiny:route_inverse})
+            nodes.update({destiny:inverse_route})
         else:
-            nodes[destiny].update(route_inverse)
+            nodes[destiny].update(inverse_route)
         if origin not in nodes:
             nodes.update({origin:route})
         else:
             nodes[origin].update(route)
     
-    
-    real=deepcopy(nodes)
-
     for k,n in nodes.items():
         n = sorted(n.items(), key=lambda x:x[1])
         nodes[k]=n
 
-    for origin in nodes:
-        result=aStar(origin,nodes,real)
-        print(result,result[1][-1])
+    return nodes
 
-
-def aStar(origin,nodes,real):
+def aStar(origin,nodes):
     if origin!=GOAL:
         path=[[origin],[]]
         last_visited=path[0][-1]
@@ -59,7 +53,7 @@ def aStar(origin,nodes,real):
             all_visited=True
             for city,distance in nodes[last_visited]:
                 if city not in path[0]:
-                    total=total+real[last_visited][city]
+                    total=total+distance
                     path[0].append(city)
                     path[1].append(total)
                     all_visited=False
@@ -67,14 +61,20 @@ def aStar(origin,nodes,real):
             if all_visited:
                 path[0].pop()
                 path[1].pop()
-                nodes[path[0][-1]].pop(0)       
-                
+                nodes[path[0][-1]].pop(0)
             last_visited=path[0][-1]
     else:
         path=[[origin],[0]]
     return path 
 
-read_files("/Users/clara/Documents/GitHub/Learning-Systems/assignment 4/city_1")        
+def main():
+    nodes = read_files("/Users/clara/Documents/GitHub/Learning-Systems/assignment 4/city_1")
+
+    for origin in nodes:
+        result=aStar(origin,nodes)
+        print(result,result[1][-1])  
+
+main()      
 
 end = time.time()
 print(end - start)
