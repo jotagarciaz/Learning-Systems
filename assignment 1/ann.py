@@ -18,7 +18,7 @@ LINE_LEN=20
 PERCENTAGE_TRAINING=0.75
 PERCENTAGE_VALIDATION=0.1
 PERCENTAGE_TEST=0.15
-ACCURACY_REQUIRED = 0.79
+ACCURACY_REQUIRED = 0.76
 
 HIDDEN_LAYER_1 = 15 
 HIDDEN_LAYER_2 = 10
@@ -99,6 +99,16 @@ def softmax(output):
     output=softmax.argmax(axis=0)
     return output,softmax
 
+def normalize(training_data,validation_data,testing_data):
+    set=np.vstack((training_data,validation_data,testing_data))
+    for i in range(len(set[0])):
+        minimum=min(set[:,i])
+        maximum=max(set[:,i])
+        training_data[:,i]=(training_data[:,i]-minimum)/(maximum-minimum)
+        validation_data[:,i]=(validation_data[:,i]-minimum)/(maximum-minimum)
+        testing_data[:,i]=(testing_data[:,i]-minimum)/(maximum-minimum)
+
+    return training_data,validation_data,testing_data
 
 def main():
     target_error = np.zeros((OUTPUT_NEURONS,OUTPUT_NEURONS))
@@ -107,6 +117,9 @@ def main():
 
     training_data,training_result=read_training_set()
     validation_data,validation_result=read_validation_set()
+    testing_data,testing_result=read_testing_set()
+
+    training_data,validation_data,testing_data=normalize(training_data,validation_data,testing_data)
 
      #weight and bias initialization
     weights_hidden_layer_1=np.random.uniform(-1,1,size=(LINE_LEN-1,HIDDEN_LAYER_1))
@@ -193,7 +206,7 @@ def main():
 
     #TESTING
     print("Reading testing data")
-    testing_data,testing_result=read_testing_set()
+    
     hits=0
     hitsEntity=np.zeros(OUTPUT_NEURONS)
     datosEntity=np.zeros(OUTPUT_NEURONS)
