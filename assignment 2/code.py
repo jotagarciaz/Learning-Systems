@@ -68,12 +68,12 @@ def main():
 		element=data[e]
 		result_e=result[e]
 		for i in range(4):
-			x_values_row = [] #type: list
+			firing_strengths = [] #type: list
 			#Short:
 			short = 1 - element[i]/MIDDLE
 			if short < 0:
 				short = 0
-			x_values_row.append(short)
+			firing_strengths.append(short)
 			#Middle:
 			if element[i] <= MIDDLE:
 				middle = element[i]/MIDDLE
@@ -81,37 +81,39 @@ def main():
 				middle = 1 - (element[i]-MIDDLE)/(1-MIDDLE)
 			if middle < 0:
 				middle = 0
-			x_values_row.append(middle)
+			firing_strengths.append(middle)
 			#Long:
 			long = (element[i]-MIDDLE)/(1-MIDDLE)
 			if long < 0:
 				long = 0
-			x_values_row.append(long)
-			x_values.append(x_values_row)
+			firing_strengths.append(long)
+			x_values.append(firing_strengths)
 
 		#Calculate the truth values of the rules.
 		truth_values = [] #type: list
 		#Rule 1:
-		truth_values.append(min(max(x_values[0][S],x_values[0][L]),max(x_values[1][M],x_values[1][L]),max(x_values[2][M],x_values[2][L]),x_values[3][M]))
-		truth_values.append(min(max(x_values[2][S],x_values[2][M]),x_values[3][S]))
-		truth_values.append(min(max(x_values[1][S],x_values[1][M]),x_values[2][L],x_values[3][L]))
-		truth_values.append(min(x_values[0][M],max(x_values[1][S],x_values[1][M]),x_values[2][S],x_values[3][L]))
+		x1=x_values[0]
+		x2=x_values[1]
+		x3=x_values[2]
+		x4=x_values[3]
+		
+		truth_values.append(min(max(x1[S],x1[L]),max(x2[M],x2[L]),max(x3[M],x3[L]),x4[M]))
+		truth_values.append(min(max(x3[S],x3[M]),x4[S]))
+		truth_values.append(min(max(x2[S],x2[M]),x3[L],x4[L]))
+		truth_values.append(min(x1[M],max(x2[S],x2[M]),x3[S],x4[L]))
 
 		rule = truth_values.index(max(truth_values))
-
+		
 		if rule == 0 or rule == 3:
-			output = VERSICOLOR
-			if result_e == output:
+			if result_e == VERSICOLOR:
 				hits[1] += 1
 			counter[1] += 1
 		elif rule == 1:
-			output = SETOSA
-			if result_e == output:
+			if result_e == SETOSA:
 				hits[0] += 1
 			counter[0] += 1
 		elif rule == 2: 
-			output = VIRGINICA
-			if result_e == output:
+			if result_e == VIRGINICA:
 				hits[2] += 1
 			counter[2] += 1  
 
