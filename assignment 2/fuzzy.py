@@ -29,6 +29,7 @@ LEARNING_RATE=0.1
 MIDDLE_LOW=0.3
 MIDDLE_HIGH=0.8
 
+
 def num(s):
     try:
         return int(s)

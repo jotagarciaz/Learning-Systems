@@ -17,9 +17,9 @@ import random
 import matplotlib.pyplot as plt
 
 
-N_MUTANTS=60
+N_MUTANTS=50
 mutants=[]
-MAXIMUM_DISTANCE_ALLOWED=7700
+MAXIMUM_DISTANCE_ALLOWED=8500
 
 
 class Point:
