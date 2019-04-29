@@ -11,15 +11,15 @@ import random
 import numpy as np
 #import matplotlib.pyplot as plt
 
-f = open("/Users/clara/Documents/GitHub/Learning-Systems/assignment 2/iris", 'r')
+f = open("/Users/jgarcia/Documents/Learning Systems/assignment 2/iris", 'r')
 f.seek(0)
 n_lines_to_read = len(f.readlines())
 LINE_LEN=5
 
-MIDDLE=0.25
-s = 0
-m = 1
-l = 2
+MIDDLE=0.6
+S = 0
+M = 1
+L = 2
 SETOSA = 1
 VERSICOLOR = 2
 VIRGINICA = 3
@@ -40,7 +40,7 @@ def read_file():
 		aux=aux.split(" ", LINE_LEN)
 		line=np.zeros(len(aux)-1)
 		for j in range(0,len(aux)-1):
-			line[j]=(num(aux[j]))
+			line[j]=(float(aux[j]))
 			
 		data_set[i]=line.copy()
 		result[i]=int(aux[-1])
@@ -48,14 +48,13 @@ def read_file():
 	return data_set,result
 
 
-def normalize(data):
-	set=np.vstack(data)
+def normalize(set):
 	for i in range(len(set[0])):
 		minimum=min(set[:,i])
 		maximum=max(set[:,i])
-		data[:,i]=(data[:,i]-minimum)/(maximum-minimum)
+		set[:,i]=(set[:,i]-minimum)/(maximum-minimum)
 
-	return data
+	return set
 
 def main():
 	data,result=read_file()
@@ -93,10 +92,10 @@ def main():
 		#Calculate the truth values of the rules.
 		truth_values = [] #type: list
 		#Rule 1:
-		truth_values.append((x_values[0][s] + x_values[0][l])*(x_values[1][m] + x_values[1][l])*(x_values[2][m] + x_values[2][l])*x_values[3][m])
-		truth_values.append((x_values[2][s] + x_values[2][m])*x_values[3][s])
-		truth_values.append((x_values[1][s] + x_values[1][m])*x_values[2][l]*x_values[3][l])
-		truth_values.append(x_values[0][m]*(x_values[1][s] + x_values[1][m])*x_values[2][s]*x_values[3][l])
+		truth_values.append(min(max(x_values[0][S],x_values[0][L]),max(x_values[1][M],x_values[1][L]),max(x_values[2][M],x_values[2][L]),x_values[3][M]))
+		truth_values.append(min(max(x_values[2][S],x_values[2][M]),x_values[3][S]))
+		truth_values.append(min(max(x_values[1][S],x_values[1][M]),x_values[2][L],x_values[3][L]))
+		truth_values.append(min(x_values[0][M],max(x_values[1][S],x_values[1][M]),x_values[2][S],x_values[3][L]))
 
 		rule = truth_values.index(max(truth_values))
 
