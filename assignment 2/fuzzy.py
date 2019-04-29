@@ -9,9 +9,9 @@ from copy import deepcopy
 import math
 import random
 import numpy as np
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 
-f = open("/Users/jgarcia/Documents/Learning Systems/assignment 2/iris", 'r')
+f = open("/Users/clara/Documents/GitHub/Learning-Systems/assignment 2/iris", 'r')
 f.seek(0)
 n_lines_to_read = len(f.readlines())
 LINE_LEN=5
