@@ -43,14 +43,54 @@ def read_files(file_name):
 	return nodes
 
 def bellman(nodes):
+	visited = [] #type: list
+	solutions = [] #type: list
+	aux=np.array(([],np.inf))
+	bellman_list = np.array([aux for i in range(len(nodes)-1)]) #type: list
+	#bellman_list[0] = [[GOAL], 0]
+	solutions.append([[GOAL], 0])
+	visited.append(GOAL)
+	for index, node in enumerate(nodes[GOAL]):
+		bellman_list[index] = [[GOAL, node[0]],node[1]]
+	
+	while len(bellman_list) > 0:
+		
+		min_value = min(bellman_list[:,1])
+		min_index = np.where(bellman_list[:,1]==min_value)[0][0]
+		min_node = bellman_list[min_index]
+		last_node = nodes[min_node[0][-1]]
+		for index, node in enumerate(last_node):
+			if node[0] not in visited:
+				in_bellman = False
+				for el_in, el_v in enumerate(bellman_list[:,0]):
+					if node[0] in el_v:
+						if (min_value + node[1] < bellman_list[el_in,1]):
+							bellman_list[el_in] = [deepcopy(min_node[0]), min_value + node[1]]
+							bellman_list[el_in,0].append(node[0])
+						in_bellman = True
+				if not in_bellman:
+					new_ind = np.where(bellman_list[:,1] == np.inf)[0][0]
+					bellman_list[new_ind] = [deepcopy(min_node[0]),node[1]+min_value]
+					bellman_list[new_ind,0].append(node[0])
+		solutions.append(min_node)
+		visited.append(min_node[0][-1])
+		bellman_list = np.delete(bellman_list,min_index,0)
 
-	return nodes 
+	#End while
+
+	for element in solutions:
+		aux = element[0]
+		aux.reverse()
+		element[0] = aux
+	
+	return solutions
 
 def main():
-	nodes = read_files("/Users/jgarcia/Documents/Learning Systems/assignment 4/city_1")
+	nodes = read_files("/Users/clara/Documents/GitHub/Learning-Systems/assignment 4/city_1")
 
 	result = bellman(nodes)
-	print(result)  
+	for solution in result:
+		print("Path:", solution[0], "Distance:", solution[1])
 
 main()      
 
